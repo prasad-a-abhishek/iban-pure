@@ -583,3 +583,28 @@ def test_mod97_rearrangement():
     # WEST → 32142829, GB → 1617, 82 stays
     assert numeric == "3214282912345698765432161182"
     assert int(numeric) % 97 == 1
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Additional edge cases — push to 100+ tests
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_validate_hyphen_normalization():
+    """Hyphens are stripped just like spaces."""
+    assert validate("DE89-3704-0044-0532-0130-00") is True
+    assert validate("DE89-3704-0044-0532-0130-00") == validate("DE89370400440532013000")
+
+
+def test_compute_check_digits_hyphen_stripped():
+    """compute_check_digits strips hyphens before processing."""
+    assert compute_check_digits("DE-37-04-00-44-05-32-01-30-00") == "89"
+
+
+def test_validate_single_typed_error():
+    """validate() must not raise — returns False on garbage."""
+    assert validate(None) is False
+
+
+def test_validate_integer_input():
+    """validate() must not raise — returns False on integer."""
+    assert validate(12345) is False
