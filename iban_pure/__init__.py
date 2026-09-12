@@ -6,6 +6,8 @@ __all__ = ["validate", "compute_check_digits", "format_display"]
 
 def validate(iban: str) -> bool:
     """Return True if IBAN passes mod-97 check (ISO 13616-1:2007)."""
+    if not isinstance(iban, str):
+        return False
     s = iban.replace(" ", "").replace("-", "").upper()
     if not s.isalnum() or len(s) < 5:
         return False
