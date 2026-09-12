@@ -11,6 +11,8 @@ def validate(iban: str) -> bool:
     s = iban.replace(" ", "").replace("-", "").upper()
     if not s.isalnum() or len(s) < 5:
         return False
+    if len(s) > 100:
+        return False
     # Rearrange: move first 4 to end
     rearranged = s[4:] + s[:4]
     # Substitute letters with digits: A=10, B=11, ..., Z=35
@@ -20,7 +22,10 @@ def validate(iban: str) -> bool:
             numeric += ch
         else:
             numeric += str(ord(ch) - 55)  # A→10, B→11, ..., Z→35
-    return int(numeric) % 97 == 1
+    try:
+        return int(numeric) % 97 == 1
+    except (ValueError, TypeError):
+        return False
 
 
 def compute_check_digits(bban: str) -> str:

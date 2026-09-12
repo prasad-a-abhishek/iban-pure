@@ -608,3 +608,9 @@ def test_validate_single_typed_error():
 def test_validate_integer_input():
     """validate() must not raise — returns False on integer."""
     assert validate(12345) is False
+
+
+def test_validate_oversized_input_returns_false():
+    """validate() returns False (not raises) on 10k+ char strings."""
+    assert validate("A" * 10000) is False
+    assert validate("DE" + "0" * 10000) is False
