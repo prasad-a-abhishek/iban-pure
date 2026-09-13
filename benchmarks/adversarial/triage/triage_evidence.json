@@ -1,0 +1,50 @@
+{
+  "triage_id": "cycle_67/adversary/04",
+  "target_commit": "4bf40d0",
+  "triage_date": "2026-09-13",
+  "triage_method": "deterministic minimizer + independent random sweep + comment-aware corpus walk",
+  "parent_slot": "t_49c8b7f8 (cycle_67/adversary/03)",
+  "input_artifacts": {
+    "findings_from_slot_03": "benchmarks/adversarial/findings.jsonl (1 INFO sentinel, zero actionable findings)",
+    "crash_logs_from_slot_03": [
+      "benchmarks/adversarial/runs/validate/crash_log.txt (0 bytes — empty)",
+      "benchmarks/adversarial/runs/roundtrip/crash_log.txt (0 bytes — empty)",
+      "benchmarks/adversarial/runs/format_display/crash_log.txt (0 bytes — empty)"
+    ],
+    "run_stats_from_slot_03": "benchmarks/adversarial/run_stats.json (1700000 iters, 0 violations, all_clean=true)"
+  },
+  "independent_sweep": {
+    "validate_raises_on_adversarial_strings": 0,
+    "format_display_raises_unexpected_on_str": 0,
+    "roundtrip_violations_on_canonical_ibans": 0,
+    "roundtrip_violations_total_naive_parse": 29,
+    "roundtrip_violations_naive_parse_explanation": "valid_ibans.txt is a 'key # comment' format; naive newline split produced 29 non-IBAN lines (15 comment lines + 14 IBAN-with-comment rows); re-parse with '#' delimiter shows zero real violations across all 13 canonical IBANs.",
+    "compute_check_digits_raises_on_nonstr": 11,
+    "compute_check_digits_raises_breakdown": {
+      "AttributeError_on_None_int_float_bool_tuple_list_dict_set": 10,
+      "TypeError_on_bytes": 1
+    },
+    "random_sweep_iters": 50000,
+    "random_sweep_seed": 424242,
+    "random_sweep_violations": 0
+  },
+  "minimization_summary": {
+    "FIND-M1": {
+      "category": "audit-deferred medium, defensive coding",
+      "minimized_repro": "python -c 'from iban_pure import compute_check_digits; compute_check_digits(None)'",
+      "minimization_iterations": 1,
+      "minimization_method": "Manual — the audit captured 11 distinct non-str input crashes; the None case is the canonical minimal repro because (a) it is the most likely caller mistake, (b) the exception message is the shortest, (c) it is 1-line with no setup.",
+      "severity_rationale": "CWE-754 (Improper Check for Unusual or Exceptional Conditions). No host-crash, no DoS, no data leak, no privilege escalation. Audit explicitly deferred as defensive-coding only.",
+      "blocking": false,
+      "carry_forward": true
+    }
+  },
+  "verdict_recommendation_for_slot_05": {
+    "ship_compatible": true,
+    "rationale": "Zero actionable findings across 1.7M iters + 50k independent sweep. The single MEDIUM (M1) is audit-deferred, defensive-only, and slot-02/03 harnesses already classify it as R5 expected-divergent behavior. The 3 LOWs are non-functional and audit-deferred. The 2 process drifts (M2/M3) are not code defects.",
+    "verdict_options": [
+      "VERDICT: SHIP  (recommended — M1 carried forward to cycle_68 follow-up patch)",
+      "VERDICT: REMEDIATE_REQUIRED  (only if cycle owner decides M1 must be fixed pre-ship)"
+    ]
+  }
+}
