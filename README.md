@@ -21,7 +21,7 @@ True
 - **Zero dependencies** — pure stdlib, no `pip install` surprises
 - **Strict mode by default** — rejects malformed input immediately (no silently ignored errors)
 - **ISO 13616-1:2007 compliant** — full mod-97 check, letter substitution, rearrangement
-- **98 tests covering all 8 acceptance criteria** — every edge case documented and tested
+- **103 tests covering all 8 acceptance criteria** — every edge case documented and tested
 
 ## Key Features
 

@@ -1,0 +1,39 @@
+Full enumeration of non-string inputs that crash compute_check_digits
+at iban-pure v0.1.0 @ commit 4bf40d0 (cycle_67, audited by cycle_67/01 §4.2 M1).
+
+Each row below is reproducible with a 1-line Python invocation:
+
+  python -c 'from iban_pure import compute_check_digits; compute_check_digits(<input>)'
+
+The minimal repro for triage purposes is the None case (most likely
+caller mistake); the table is the full enumeration audit captured.
+
+Input              | Exception type | Exception message
+-------------------|----------------|---------------------------------------------------
+None               | AttributeError | 'NoneType' object has no attribute 'replace'
+0                  | AttributeError | 'int' object has no attribute 'replace'
+1                  | AttributeError | 'int' object has no attribute 'replace'
+True               | AttributeError | 'bool' object has no attribute 'replace'
+False              | AttributeError | 'bool' object has no attribute 'replace'
+1.5                | AttributeError | 'float' object has no attribute 'replace'
+b'DE89370400440532013000' | TypeError | a bytes-like object is required, not 'str'
+()                 | AttributeError | 'tuple' object has no attribute 'replace'
+[]                 | AttributeError | 'list' object has no attribute 'replace'
+{}                 | AttributeError | 'dict' object has no attribute 'replace'
+set()              | AttributeError | 'set' object has no attribute 'replace'
+
+Compare to validate() (which has the isinstance guard) on the SAME inputs:
+  validate(<input>) returns False for ALL of the above. Zero raises.
+
+This asymmetry is the design defect. The audit recommended:
+  - Add `if not isinstance(bban, str): raise ValueError(...)` at the
+    top of compute_check_digits, mirroring validate()'s policy of
+    "raise the documented ValueError, not an internal AttributeError."
+
+Severity rationale (Medium, not High):
+  - CWE-754 (Improper Check for Unusual or Exceptional Conditions)
+  - Cannot crash a host process; only crashes a caller that wraps
+    compute_check_digits in `try/except ValueError` and assumes
+    AttributeError never fires.
+  - No data corruption, no privilege escalation, no DoS.
+  - Audit explicitly DEFERRED to next patch as "defensive-coding only".

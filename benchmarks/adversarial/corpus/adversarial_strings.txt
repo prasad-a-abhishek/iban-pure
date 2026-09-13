@@ -1,0 +1,102 @@
+# Adversarial string seed corpus.
+#
+# Each entry is a string the harnesses should be fed as a deliberate
+# edge-case test. The harnesses ALSO generate random adversarial inputs on
+# the fly via their inline generators; this file is the canonical
+# hand-picked set of edge cases that captures the full threat-model surface
+# enumerated in cycle_67/adversary/01 (VULN_AUDIT.md §3).
+#
+# Format:  python_repr|category|expected_behavior
+#
+# Lines starting with "#" are comments. The harness loaders strip comments.
+# Each non-comment line is a single repr-decodable Python string + a
+# category label + an expected behavior tag.
+#
+# Expected behaviors:
+#   VALIDATE_FALSE   validate() MUST return False (never raise)
+#   FORMAT_OK        format_display() MUST succeed (return str)
+#   COMPUTE_RAISE    compute_check_digits() MUST raise ValueError
+#                    (for too-short or non-alnum str inputs)
+#   ANY              no contract; harness counts outcome
+#
+# Categories (one per line):
+#   EMPTY            empty string ""
+#   WHITESPACE_ONLY  strings of only whitespace ("   ", "\\t\\n", " " * 100)
+#   SHORT            boundary strings 1..4 chars (below validate's 5-char floor)
+#   LONG_VALID_LEN   90-char alphanumeric (just under 100 cap) — not IBAN, must reject
+#   LONG_OVERSIZE    101, 200, 1000, 10000, 100000 char strings (above 100 cap)
+#   UNICODE_BMP      CJK, RTL/LTR markers, BOM, NBSP, replacement char
+#   UNICODE_LATIN    É, ñ, ü (passes isalnum but is non-ASCII)
+#   CONTROL_CHARS    \\x00..\\x1f, \\x7f
+#   PUNCTUATION      all-punctuation strings (5..50 chars)
+#   CONCAT_BORDERLINE one-char-prefix/suffix + valid IBAN (alnum but wrong length)
+#   DOMAIN_MISMATCH  looks-like-IBAN but first 2 chars are not a real country code
+#
+# NOTE on categories that are NOT here:
+#   MIXED_CASE       — lowercase real IBAN (e.g. "de89...") is NOT adversarial;
+#                      validate() is documented to accept it (case-invariant).
+#   WHITESPACE_PADDED— "  DE89...  " is NOT adversarial; validate() is documented
+#                      to strip spaces + hyphens before checking.
+#   HYPEN_SPACED     — "DE89-3704-..." is NOT adversarial; same stripping rule.
+# Those categories are covered by harness_inline generators but excluded
+# from the corpus because they belong to the contract, not the threat model.
+#
+
+""|EMPTY|VALIDATE_FALSE
+" "|WHITESPACE_ONLY|VALIDATE_FALSE
+"   "|WHITESPACE_ONLY|VALIDATE_FALSE
+"\t"|WHITESPACE_ONLY|VALIDATE_FALSE
+"\t\n"|WHITESPACE_ONLY|VALIDATE_FALSE
+" \t \n "|WHITESPACE_ONLY|VALIDATE_FALSE
+" "*100|WHITESPACE_ONLY|VALIDATE_FALSE
+"A"|SHORT|VALIDATE_FALSE
+"AB"|SHORT|VALIDATE_FALSE
+"ABC"|SHORT|VALIDATE_FALSE
+"ABCD"|SHORT|VALIDATE_FALSE
+"DE89"|SHORT|VALIDATE_FALSE
+"DE8937"|SHORT|VALIDATE_FALSE
+"X"*101|LONG_OVERSIZE|VALIDATE_FALSE
+"X"*1000|LONG_OVERSIZE|VALIDATE_FALSE
+"X"*10000|LONG_OVERSIZE|VALIDATE_FALSE
+"X"*100000|LONG_OVERSIZE|VALIDATE_FALSE
+"X"*2150|LONG_OVERSIZE|VALIDATE_FALSE
+"X"*4299|LONG_OVERSIZE|VALIDATE_FALSE
+"中文字"|UNICODE_BMP|VALIDATE_FALSE
+"中文ABC"|UNICODE_BMP|VALIDATE_FALSE
+"\u202E"|UNICODE_BMP|VALIDATE_FALSE
+"\u200E"|UNICODE_BMP|VALIDATE_FALSE
+"\u200F"|UNICODE_BMP|VALIDATE_FALSE
+"\uFEFF"|UNICODE_BMP|VALIDATE_FALSE
+"\u00A0"|UNICODE_BMP|VALIDATE_FALSE
+"\u200B"|UNICODE_BMP|VALIDATE_FALSE
+"\uFFFD"|UNICODE_BMP|VALIDATE_FALSE
+"DE89370400440532013000\u202E"|UNICODE_BMP|VALIDATE_FALSE
+"É"|UNICODE_LATIN|VALIDATE_FALSE
+"ñ"|UNICODE_LATIN|VALIDATE_FALSE
+"ü"|UNICODE_LATIN|VALIDATE_FALSE
+"ÉÁÍÓÚ"|UNICODE_LATIN|VALIDATE_FALSE
+"\x00"|CONTROL_CHARS|VALIDATE_FALSE
+"\x00\x00\x00\x00\x00"|CONTROL_CHARS|VALIDATE_FALSE
+"\x1f\x1f\x1f\x1f\x1f"|CONTROL_CHARS|VALIDATE_FALSE
+"\x7f"|CONTROL_CHARS|VALIDATE_FALSE
+"!@#$%"|PUNCTUATION|VALIDATE_FALSE
+"!!!!!"|PUNCTUATION|VALIDATE_FALSE
+"DE8937040044053201300!"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"!DE89370400440532013000"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE893704004405320130000"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"de89370400440532013000\u202E"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000\u00A0"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000\n"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000\t"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000$"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"DE89370400440532013000€"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"GB82WEST1234569876543"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"GB82WEST123456987654320"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"GB82WEST1234569876543A"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"A82WEST12345698765432"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"1B82WEST12345698765432"|CONCAT_BORDERLINE|VALIDATE_FALSE
+"XX89370400440532013000"|DOMAIN_MISMATCH|VALIDATE_FALSE
+"ZZ89370400440532013000"|DOMAIN_MISMATCH|VALIDATE_FALSE
+"999999999999999999999999"|DOMAIN_MISMATCH|VALIDATE_FALSE
+"1234567890123456789012"|DOMAIN_MISMATCH|VALIDATE_FALSE

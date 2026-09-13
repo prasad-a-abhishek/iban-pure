@@ -1,0 +1,2 @@
+compute_check_digits(None)
+AttributeError: 'NoneType' object has no attribute 'replace'

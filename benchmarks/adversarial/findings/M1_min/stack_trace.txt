@@ -1,0 +1,30 @@
+Traceback captured at iban-pure v0.1.0 @ commit 4bf40d0 (cycle_67).
+Captured: 2026-09-13, by cycle_67/adversary/04 triage pass.
+Source:    /root/projects/iban-pure/.worktrees/t_0476cddf/benchmarks/adversarial/findings/M1_min/repro_oneline.py
+
+Repro:
+  $ python benchmarks/adversarial/findings/M1_min/repro_oneline.py
+
+Output (verbatim):
+  Traceback (most recent call last):
+    File "/root/projects/iban-pure/.worktrees/t_0476cddf/benchmarks/adversarial/findings/M1_min/repro_oneline.py", line 16, in <module>
+      iban_pure.compute_check_digits(None)
+    File "/root/projects/iban-pure/.worktrees/t_cycle67_adv01/iban_pure/__init__.py", line 37, in compute_check_digits
+      s = bban.replace(" ", "").replace("-", "").upper()
+        ^^^^^^^^^^^^
+  AttributeError: 'NoneType' object has no attribute 'replace'
+
+Exit code: 1 (uncaught exception — Python default).
+
+Root cause:
+  iban_pure/__init__.py:37 — `bban.replace(...)` is called WITHOUT a
+  prior `isinstance(bban, str)` guard.
+
+Compare line 9 (validate) which DOES have the guard:
+  if not isinstance(iban, str):
+      return False
+
+Fix (1 line, audit's recommendation):
+  Add at the top of compute_check_digits (after the docstring):
+      if not isinstance(bban, str):
+          raise ValueError("compute_check_digits requires a string input")

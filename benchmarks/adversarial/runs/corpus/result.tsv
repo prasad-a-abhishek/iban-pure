@@ -1,0 +1,78 @@
+category	expected	input_repr	input_len	validate	validate_raised	format_display_raised	compute_check_digits	compute_check_digits_raised	assembled_iban	validate_assembled	violates_expected	violation_reason
+VALID_IBAN	VALIDATE_TRUE	'DE89370400440532013000'	22	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'GB82WEST12345698765432'	22	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'FR1420041010050500013M02606'	27	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'ES9121000418450200051332'	24	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'IT60X0542811101000000123456'	27	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'NL91ABNA0417164300'	18	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'BE68539007547034'	16	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'AT611904300234573201'	20	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'CH9300762011623852957'	21	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'SE4550000000058398257466'	24	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'NO9386011117947'	15	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'DK5000400440116243'	18	True	None	None	None	None			False	
+VALID_IBAN	VALIDATE_TRUE	'FI2112345600000785'	18	True	None	None	None	None			False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'DE370400440532013000'	20				89	None	DE89370400440532013000	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'GBWEST12345698765432'	20				82	None	GB82WEST12345698765432	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'FR20041010050500013M02606'	25				14	None	FR1420041010050500013M02606	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'ES21000418450200051332'	22				91	None	ES9121000418450200051332	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'ITX0542811101000000123456'	25				60	None	IT60X0542811101000000123456	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'NLABNA0417164300'	16				91	None	NL91ABNA0417164300	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'BE539007547034'	14				68	None	BE68539007547034	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'AT1904300234573201'	18				61	None	AT611904300234573201	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'CH00762011623852957'	19				93	None	CH9300762011623852957	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'SE50000000058398257466'	22				45	None	SE4550000000058398257466	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'NO86011117947'	13				93	None	NO9386011117947	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'DK00400440116243'	16				50	None	DK5000400440116243	True	False	
+BBAN_ROUNDTRIP	ROUNDTRIP_OK	'FI12345600000785'	16				21	None	FI2112345600000785	True	False	
+EMPTY	VALIDATE_FALSE	''	0	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+WHITESPACE_ONLY	VALIDATE_FALSE	' '	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+WHITESPACE_ONLY	VALIDATE_FALSE	'   '	3	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+WHITESPACE_ONLY	VALIDATE_FALSE	'\t'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+WHITESPACE_ONLY	VALIDATE_FALSE	'\t\n'	2	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+WHITESPACE_ONLY	VALIDATE_FALSE	' \t \n '	5	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'A'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'AB'	2	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'ABC'	3	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'ABCD'	4	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'DE89'	4	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+SHORT	VALIDATE_FALSE	'DE8937'	6	False	None	None	73	None			False	
+UNICODE_BMP	VALIDATE_FALSE	'中文字'	3	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'中文ABC'	5	False	None	None	08	None			False	
+UNICODE_BMP	VALIDATE_FALSE	'\u202e'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'\u200e'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'\u200f'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'\ufeff'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'\xa0'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'\u200b'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'�'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_BMP	VALIDATE_FALSE	'DE89370400440532013000\u202e'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_LATIN	VALIDATE_FALSE	'É'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_LATIN	VALIDATE_FALSE	'ñ'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_LATIN	VALIDATE_FALSE	'ü'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+UNICODE_LATIN	VALIDATE_FALSE	'ÉÁÍÓÚ'	5	False	None	None	16	None			False	
+CONTROL_CHARS	VALIDATE_FALSE	'\x00'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONTROL_CHARS	VALIDATE_FALSE	'\x00\x00\x00\x00\x00'	5	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONTROL_CHARS	VALIDATE_FALSE	'\x1f\x1f\x1f\x1f\x1f'	5	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONTROL_CHARS	VALIDATE_FALSE	'\x7f'	1	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+PUNCTUATION	VALIDATE_FALSE	'!@#$%'	5	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+PUNCTUATION	VALIDATE_FALSE	'!!!!!'	5	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE8937040044053201300!'	22	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'!DE89370400440532013000'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE893704004405320130000'	23	False	None	None	67	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'	136	False	None	None	50	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'de89370400440532013000\u202e'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000\xa0'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000\n'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000\t'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000$'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'DE89370400440532013000€'	23	False	None	None	None	ValueError: Invalid BBAN: must be at least 5 alphanumeric characters			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'GB82WEST1234569876543'	21	False	None	None	82	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'GB82WEST123456987654320'	23	False	None	None	58	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'GB82WEST1234569876543A'	22	False	None	None	37	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'A82WEST12345698765432'	21	False	None	None	14	None			False	
+CONCAT_BORDERLINE	VALIDATE_FALSE	'1B82WEST12345698765432'	22	False	None	None	37	None			False	
+DOMAIN_MISMATCH	VALIDATE_FALSE	'XX89370400440532013000'	22	False	None	None	64	None			False	
+DOMAIN_MISMATCH	VALIDATE_FALSE	'ZZ89370400440532013000'	22	False	None	None	40	None			False	
+DOMAIN_MISMATCH	VALIDATE_FALSE	'999999999999999999999999'	24	False	None	None	70	None			False	
+DOMAIN_MISMATCH	VALIDATE_FALSE	'1234567890123456789012'	22	False	None	None	94	None			False	

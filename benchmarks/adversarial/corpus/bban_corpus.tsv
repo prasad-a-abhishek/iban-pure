@@ -1,0 +1,30 @@
+# BBAN seed corpus — for compute_check_digits round-trip testing.
+#
+# Each line: full_iban TAB bban_no_check_digits TAB expected_check_digits
+#
+# IBAN structure:  country(2) + check(2) + BBAN(>=11)
+# BBAN arg form:   country(2) + BBAN(>=11)   ← what compute_check_digits takes
+#
+# The harness asserts:
+#   1. iban_pure.validate(full_iban) == True
+#   2. iban_pure.compute_check_digits(bban_no_check) == expected_check_digits
+#   3. iban_pure.validate(bban_no_check[:2] + computed_check + bban_no_check[2:]) == True
+#
+# If any of these three fails, the seed has regressed and the harness exits
+# with code 2 (setup error) before fuzzing even starts. This catches
+# source-under-test regressions immediately.
+#
+
+DE89370400440532013000	DE370400440532013000	89
+GB82WEST12345698765432	GBWEST12345698765432	82
+FR1420041010050500013M02606	FR20041010050500013M02606	14
+ES9121000418450200051332	ES21000418450200051332	91
+IT60X0542811101000000123456	ITX0542811101000000123456	60
+NL91ABNA0417164300	NLABNA0417164300	91
+BE68539007547034	BE539007547034	68
+AT611904300234573201	AT1904300234573201	61
+CH9300762011623852957	CH00762011623852957	93
+SE4550000000058398257466	SE50000000058398257466	45
+NO9386011117947	NO86011117947	93
+DK5000400440116243	DK00400440116243	50
+FI2112345600000785	FI12345600000785	21

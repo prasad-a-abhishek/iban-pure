@@ -1,0 +1,130 @@
+{
+  "started_at": "2026-09-13T00:21:03.169084+00:00",
+  "ended_at": "2026-09-13T00:21:03.170092+00:00",
+  "duration_seconds": 0.001,
+  "total_rows": 77,
+  "violations": 0,
+  "by_category": {
+    "BBAN_ROUNDTRIP": 13,
+    "CONCAT_BORDERLINE": 15,
+    "CONTROL_CHARS": 4,
+    "DOMAIN_MISMATCH": 4,
+    "EMPTY": 1,
+    "PUNCTUATION": 2,
+    "SHORT": 6,
+    "UNICODE_BMP": 10,
+    "UNICODE_LATIN": 4,
+    "VALID_IBAN": 13,
+    "WHITESPACE_ONLY": 5
+  },
+  "corpus_metadata": {
+    "valid_ibans_count": 13,
+    "valid_ibans": [
+      "DE89370400440532013000",
+      "GB82WEST12345698765432",
+      "FR1420041010050500013M02606",
+      "ES9121000418450200051332",
+      "IT60X0542811101000000123456",
+      "NL91ABNA0417164300",
+      "BE68539007547034",
+      "AT611904300234573201",
+      "CH9300762011623852957",
+      "SE4550000000058398257466",
+      "NO9386011117947",
+      "DK5000400440116243",
+      "FI2112345600000785"
+    ],
+    "bban_corpus_count": 13,
+    "bban_corpus": [
+      [
+        "DE89370400440532013000",
+        "DE370400440532013000",
+        "89"
+      ],
+      [
+        "GB82WEST12345698765432",
+        "GBWEST12345698765432",
+        "82"
+      ],
+      [
+        "FR1420041010050500013M02606",
+        "FR20041010050500013M02606",
+        "14"
+      ],
+      [
+        "ES9121000418450200051332",
+        "ES21000418450200051332",
+        "91"
+      ],
+      [
+        "IT60X0542811101000000123456",
+        "ITX0542811101000000123456",
+        "60"
+      ],
+      [
+        "NL91ABNA0417164300",
+        "NLABNA0417164300",
+        "91"
+      ],
+      [
+        "BE68539007547034",
+        "BE539007547034",
+        "68"
+      ],
+      [
+        "AT611904300234573201",
+        "AT1904300234573201",
+        "61"
+      ],
+      [
+        "CH9300762011623852957",
+        "CH00762011623852957",
+        "93"
+      ],
+      [
+        "SE4550000000058398257466",
+        "SE50000000058398257466",
+        "45"
+      ],
+      [
+        "NO9386011117947",
+        "NO86011117947",
+        "93"
+      ],
+      [
+        "DK5000400440116243",
+        "DK00400440116243",
+        "50"
+      ],
+      [
+        "FI2112345600000785",
+        "FI12345600000785",
+        "21"
+      ]
+    ],
+    "adversarial_strings_count": 51,
+    "adversarial_categories": [
+      "CONCAT_BORDERLINE",
+      "CONTROL_CHARS",
+      "DOMAIN_MISMATCH",
+      "EMPTY",
+      "PUNCTUATION",
+      "SHORT",
+      "UNICODE_BMP",
+      "UNICODE_LATIN",
+      "WHITESPACE_ONLY"
+    ],
+    "adversarial_expected_behaviors": [
+      "VALIDATE_FALSE"
+    ],
+    "files": {
+      "valid_ibans": "/root/projects/iban-pure/.worktrees/t_49c8b7f8/benchmarks/adversarial/corpus/valid_ibans.txt",
+      "valid_ibans_sha256": "f94296af8f5554f19260c69ec6927b949321a9e2da89e2fe512c811b5b7b9e18",
+      "bban_corpus": "/root/projects/iban-pure/.worktrees/t_49c8b7f8/benchmarks/adversarial/corpus/bban_corpus.tsv",
+      "bban_corpus_sha256": "596f1236c5401efcce17d5b741c9239d329c28e9d04105a5f85d279a25c63fff",
+      "adversarial_strings": "/root/projects/iban-pure/.worktrees/t_49c8b7f8/benchmarks/adversarial/corpus/adversarial_strings.txt",
+      "adversarial_strings_sha256": "e278a355c87e21e773a749167ab2b4db980c14c60983001b3a817af26119943d"
+    }
+  },
+  "violation_details": []
+}
