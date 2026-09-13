@@ -84,6 +84,20 @@ DE (22), GB (22), FR (27), ES (24), NL (18), BE (16), AT (20), SE (24), NO (15),
 - No network access or API calls
 - Does not verify that an IBAN corresponds to a real bank account
 
+## Known Issues (audit-deferred, tracked for cycle_68)
+
+The following findings were identified by the vulnerability audit and confirmed by fuzzing. All are accepted-risk for v0.1.0 and none are blocking.
+
+**Medium (3):**
+- `compute_check_digits` raises `TypeError` on non-string input (e.g. `None`, `int`) — no `isinstance` guard
+- Spec described a 4-argument `validate(iban, normalize, format, check)` API; shipped has 3 arguments (no `normalize`)
+- Spec described a 2-argument `compute_check_digits(bban, country)`; shipped is 1-argument
+
+**Low (3):**
+- Test fixture `DK5000400440116243` is a stale/wrong fixture (should be `DK5000400440116243` per official validation)
+- README documents `python -m iban_pure` but no `__main__.py` entry point exists
+- `format_display` silently strips whitespace and ignores garbage characters instead of raising
+
 ## Non-goals
 
 - Bank account lookup or validation against a live database
