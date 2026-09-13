@@ -170,6 +170,7 @@ compute_check_digits('DE370400440532013000') = '89'
 tests_total: 103
 tests_passed: 103
 tests_failed: 0
+tests_passing: true
 findings_critical: 0
 findings_high: 0
 findings_medium_low: 1
