@@ -4,7 +4,7 @@
 
 > "Would I be sad if this repo didn't exist?" — A tiny, no-dependency library for validating and formatting IBANs in any Python project, including strict environments where adding a package is friction.
 
-`pip install git+https://github.com/prasad-a-abhishek/iban-pure.git`
+`pip install iban-pure`
 
 ```python
 >>> from iban_pure import validate, compute_check_digits, format_display
@@ -107,7 +107,7 @@ The following findings were identified by the vulnerability audit and confirmed 
 ## Install
 
 ```bash
-pip install git+https://github.com/prasad-a-abhishek/iban-pure.git
+pip install iban-pure
 ```
 
 For development:
