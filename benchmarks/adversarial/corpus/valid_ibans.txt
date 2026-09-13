@@ -1,0 +1,30 @@
+# Canonical seed corpus — known-valid IBANs from 13 countries.
+#
+# Sourced from the upstream test suite (tests/test_iban_pure.py AC2 fixtures)
+# and cross-checked against the iban.com registry. Each row is a complete
+# IBAN that MUST round-trip through iban_pure.validate() → True.
+#
+# Format: one IBAN per line, with trailing "# CC comment" annotation lines
+# ignored by the harness loaders. The harnesses read this file as the
+# authoritative seed set (mirrors the inline VALID_IBANS in each harness;
+# the file is the source of truth, the inline list is a frozen snapshot).
+#
+# Used by:
+#   - harness_validate.py        (asserts each entry validates True)
+#   - harness_roundtrip.py       (asserts each entry round-trips + cross-checks check digits)
+#   - harness_format_display.py  (asserts each entry formats cleanly)
+#
+
+DE89370400440532013000        # Germany — 22 chars, 18 BBAN
+GB82WEST12345698765432        # UK — 22 chars, 18 BBAN
+FR1420041010050500013M02606   # France — 27 chars, 23 BBAN
+ES9121000418450200051332      # Spain — 24 chars, 20 BBAN
+IT60X0542811101000000123456   # Italy — 27 chars, 23 BBAN
+NL91ABNA0417164300            # Netherlands — 18 chars, 14 BBAN
+BE68539007547034              # Belgium — 16 chars, 12 BBAN
+AT611904300234573201          # Austria — 20 chars, 16 BBAN
+CH9300762011623852957         # Switzerland — 21 chars, 17 BBAN
+SE4550000000058398257466       # Sweden — 24 chars, 20 BBAN
+NO9386011117947               # Norway — 15 chars, 11 BBAN
+DK5000400440116243            # Denmark — 18 chars, 14 BBAN
+FI2112345600000785            # Finland — 18 chars, 14 BBAN
